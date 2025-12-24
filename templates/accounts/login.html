@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Try Out{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f5f7fa;
+    }
+
+    .login-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .login-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        width: 100%;
+        max-width: 420px;
+        padding: 30px 28px;
+    }
+
+    .login-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+    }
+
+    .login-subtitle {
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: #555;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #d0d7de;
+        font-size: 14px;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 2px rgba(102,126,234,0.15);
+    }
+
+    .login-button {
+        width: 100%;
+        padding: 10px 0;
+        border-radius: 6px;
+        border: none;
+        background: #667eea;
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .login-button:hover {
+        background: #5564d6;
+    }
+
+    .error-message {
+        background: #fdecea;
+        border: 1px solid #f5c2c0;
+        color: #b02a37;
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-page">
+    <div class="login-card">
+        <div style="margin-bottom: 12px;">
+            <div class="login-title">Try Out System</div>
+            <div class="login-subtitle">Silakan login untuk melanjutkan</div>
+        </div>
+
+        {% if blocked %}
+        <div class="error-message">
+            Akun Anda telah diblokir oleh administrator.
+        </div>
+        {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="error-message">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'accounts:login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input id="username" name="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" required>
+            </div>
+            <button type="submit" class="login-button">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

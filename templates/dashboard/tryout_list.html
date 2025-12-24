@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Kelola Try Out{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 40px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>Daftar Try Out ({{ tryouts.count }})</h2>
+        <div>
+            <a href="{% url 'dashboard:index' %}" class="btn btn-small">← Dashboard</a>
+            <a href="{% url 'dashboard:tryout_create' %}" class="btn btn-small btn-success">+ Buat Try Out</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Judul</th>
+                    <th>Mata Pelajaran</th>
+                    <th>Waktu Publish</th>
+                    <th>Durasi</th>
+                    <th>Status</th>
+                    <th>Soal</th>
+                    <th>Peserta Selesai</th>
+                    <th>Rata-rata Nilai</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tryout in tryouts %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>{{ tryout.title }}</strong></td>
+                    <td>{{ tryout.subjects }}</td>
+                    <td>{{ tryout.publish_time|date:"d M Y, H:i" }}</td>
+                    <td>{{ tryout.work_time_minutes }} menit</td>
+                    <td>
+                        {% if tryout.is_published %}
+                        <span style="color: #27ae60; font-weight: 600;">✓ Published</span>
+                        {% else %}
+                        <span style="color: #e74c3c; font-weight: 600;">○ Draft</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ tryout.questions.count }} soal</td>
+
+
+                    <td>{{ tryout.finished_count|default:"0" }}</td>
+
+                    <td>
+                        {% if tryout.avg_score %}
+                            {{ tryout.avg_score|floatformat:2 }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <div style="display: flex; gap: 5px;">
+                            <a href="{% url 'dashboard:tryout_settings' tryout.id %}" class="btn btn-small">Settings</a>
+                            <a href="{% url 'dashboard:tryout_edit' tryout.id %}" class="btn btn-small" style="background: #3498db;">Edit</a>
+                            <a href="{% url 'dashboard:tryout_delete' tryout.id %}" class="btn btn-small btn-danger"
+                               onclick="return confirm('Hapus try out ini?')">Hapus</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 40px; color: #999;">
+                        Belum ada try out. <a href="{% url 'dashboard:tryout_create' %}">Buat try out pertama</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

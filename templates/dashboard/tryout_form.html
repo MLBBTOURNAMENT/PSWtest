@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if tryout %}
+        Edit Try Out
+    {% else %}
+        Buat Try Out
+    {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .formset-row {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    position: relative;
+  }
+
+  .formset-row h4 {
+    margin-bottom: 15px;
+    color: #667eea;
+  }
+
+  .delete-checkbox {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .add-more {
+    background: #27ae60;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container" style="margin-top: 40px">
+  <div style="margin-bottom: 20px">
+    <a href="{% url 'dashboard:tryout_list' %}" class="btn btn-small"
+      >← Kembali</a
+    >
+  </div>
+
+  <div class="card">
+    <h2 style="margin-bottom: 25px">
+      {% if tryout %}Edit{% else %}Buat{% endif %} Try Out
+    </h2>
+
+    <form method="post" id="tryoutForm">
+      {% csrf_token %}
+
+      <h3 style="margin-bottom: 20px">Informasi Try Out</h3>
+
+      <div class="form-group">
+        <label>Judul Try Out</label>
+        {{ form.title }}
+      </div>
+
+      <div class="form-group">
+        <label>Deskripsi</label>
+        {{ form.description }}
+      </div>
+
+      <div class="form-group">
+        <label>Mata Pelajaran (pisahkan dengan ·)</label>
+        {{ form.subjects }}
+      </div>
+
+      <div class="form-group">
+        <label>Waktu Publish</label>
+        {{ form.publish_time }}
+      </div>
+
+      <div class="form-group">
+        <label>Durasi Ujian (menit)</label>
+        {{ form.work_time_minutes }}
+      </div>
+
+      <hr style="margin: 30px 0" />
+
+      <h3 style="margin-bottom: 20px">Daftar Soal</h3>
+
+      {{ formset.management_form }} {{ formset.management_form }}
+
+      <div id="question-formset">
+        {% for form in formset %}
+        <div class="formset-row">
+          <h4>Soal {{ forloop.counter }}</h4>
+
+          {% if form.DELETE %}
+          <div class="delete-checkbox">
+            <label> {{ form.DELETE }} Hapus soal ini </label>
+          </div>
+          {% endif %} {{ form.id }}
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>No.</label>
+              {{ form.number }}
+            </div>
+            <div class="form-group">
+              <label>Pertanyaan</label>
+              {{ form.text }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>A.</label>
+            {{ form.option_a }}
+          </div>
+          <div class="form-group">
+            <label>B.</label>
+            {{ form.option_b }}
+          </div>
+          <div class="form-group">
+            <label>C.</label>
+            {{ form.option_c }}
+          </div>
+          <div class="form-group">
+            <label>D.</label>
+            {{ form.option_d }}
+          </div>
+          <div class="form-group">
+            <label>Jawaban Benar</label>
+            {{ form.correct_option }}
+          </div>
+          <div class="form-group">
+            <label>Skor Soal</label>
+            {{ form.score }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- TEMPLATE KOSONG UNTUK TAMBAH SOAL -->
+      <div id="empty-form-template" style="display: none">
+        <div class="formset-row">
+          <h4>Soal __num__</h4>
+
+          {{ formset.empty_form.id }}
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>No.</label>
+              {{ formset.empty_form.number }}
+            </div>
+            <div class="form-group">
+              <label>Pertanyaan</label>
+              {{ formset.empty_form.text }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>A.</label>
+            {{ formset.empty_form.option_a }}
+          </div>
+          <div class="form-group">
+            <label>B.</label>
+            {{ formset.empty_form.option_b }}
+          </div>
+          <div class="form-group">
+            <label>C.</label>
+            {{ formset.empty_form.option_c }}
+          </div>
+          <div class="form-group">
+            <label>D.</label>
+            {{ formset.empty_form.option_d }}
+          </div>
+          <div class="form-group">
+            <label>Jawaban Benar</label>
+            {{ formset.empty_form.correct_option }}
+          </div>
+          <div class="form-group">
+            <label>Skor Soal</label>
+            {{ formset.empty_form.score }}
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="add-more" id="add-question-btn">
+        + Tambah Soal
+      </button>
+      <button type="submit" class="btn" style="margin-top: 20px">
+        {% if tryout %}Update Try Out{% else %}Simpan Try Out{% endif %}
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  const totalFormsInput = document.getElementById("id_questions-TOTAL_FORMS");
+  const formsetContainer = document.getElementById("question-formset");
+  const addBtn = document.getElementById("add-question-btn");
+  const emptyTemplate = document
+    .getElementById("empty-form-template")
+    .innerHTML.trim();
+
+  addBtn.addEventListener("click", () => {
+    const totalForms = parseInt(totalFormsInput.value);
+    // ganti __prefix__ dengan index baru
+    let newFormHtml = emptyTemplate.replace(/__prefix__/g, totalForms);
+    // ganti label Soal __num__
+    newFormHtml = newFormHtml.replace("Soal __num__", `Soal ${totalForms + 1}`);
+    formsetContainer.insertAdjacentHTML("beforeend", newFormHtml);
+    totalFormsInput.value = totalForms + 1;
+  });
+</script>
+{% endblock %}

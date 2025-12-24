@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Kartu Peserta - {{ participant.full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f5f7fa;
+    }
+
+    .card-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .card-container {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        max-width: 420px;
+        width: 100%;
+        border: 1px solid #e5e7eb;
+    }
+
+    .card-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .card-header h1 {
+        font-size: 18px;
+        margin-bottom: 4px;
+        color: #111827;
+    }
+
+    .card-header p {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .info-row {
+        display: flex;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+
+    .info-label {
+        width: 110px;
+        color: #6b7280;
+    }
+
+    .info-value {
+        color: #111827;
+        font-weight: 500;
+    }
+
+    .info-value code {
+        background: #f3f4f6;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #374151;
+    }
+
+    .card-footer {
+        padding: 14px 20px 18px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .card-footer button {
+        width: 100%;
+        padding: 9px 0;
+        border-radius: 6px;
+        border: none;
+        background: #4b5563;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card-page">
+    <div class="card-container" id="participantCard">
+        <div class="card-header">
+            <h1>Kartu Peserta Try Out</h1>
+            <p>PSW 2025</p>
+        </div>
+
+        <div class="card-body">
+            <div class="info-row">
+                <div class="info-label">Nama</div>
+                <div class="info-value">{{ participant.full_name }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Sekolah</div>
+                <div class="info-value">{{ participant.school }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Username</div>
+                <div class="info-value"><code>{{ participant.user.username }}</code></div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Password</div>
+                <div class="info-value"><code>{{ participant.raw_password }}</code></div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Hari Try Out</div>
+                <div class="info-value">Hari {{ participant.day }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Login Address</div>
+                <div class="info-value" style="font-size: 12px;">{{ login_url }}</div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <button type="button" onclick="downloadCard()">Save card (.png)</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    function downloadCard() {
+        html2canvas(document.getElementById('participantCard')).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'kartu-peserta-{{ participant.user.username }}.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+</script>
+{% endblock %}

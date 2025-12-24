@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load exam_extras %}
+
+{% block title %}Data Peserta{% endblock %}
+
+{% block extra_css %}
+<style>
+    .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    .status-icon {
+        font-size: 18px;
+    }
+
+    .action-btns {
+        display: flex;
+        gap: 5px;
+    }
+
+    .action-btns a,
+    .action-btns button {
+        padding: 5px 10px;
+        font-size: 12px;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background: #3498db;
+        color: white;
+    }
+
+    .btn-email {
+        background: #27ae60;
+        color: white;
+    }
+
+    .btn-block {
+        background: #e74c3c;
+        color: white;
+    }
+
+    .btn-delete {
+        background: #95a5a6;
+        color: white;
+    }
+
+    .status-finished {
+        color: #27ae60;
+    }
+
+    .status-out {
+        color: #e74c3c;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 40px;">
+    <div class="action-bar">
+        <h2>Data Peserta ({{ participants.count }})</h2>
+        <div class="btn-group">
+            <a href="{% url 'dashboard:index' %}" class="btn btn-small">← Dashboard</a>
+            <a href="{% url 'dashboard:participant_add' %}" class="btn btn-small btn-success">+ Tambah Peserta</a>
+            <a href="{% url 'dashboard:participant_send_all_emails' %}" class="btn btn-small" 
+               onclick="return confirm('Kirim email ke semua peserta?')">📧 Kirim Semua Email</a>
+        </div>
+    </div>
+
+    <div class="card" style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Sekolah</th>
+                    <th>Hari</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    {% if has_active_tryout %}
+                    <th>Status</th>
+                    <th>Out App</th>
+                    {% endif %}
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for participant in participants %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ participant.full_name }}</td>
+                    <td>{{ participant.user.email }}</td>
+                    <td>{{ participant.school }}</td>
+                    <td>Hari {{ participant.day }}</td>
+                    <td><code>{{ participant.user.username }}</code></td>
+                    <td><code>{{ participant.raw_password|default:"-" }}</code></td>
+                    
+                    {% if has_active_tryout %}
+                    <td>
+                        {% with status=participant_status|get_item:participant.id %}
+                        {% if status.tryouts %}
+                            {% for pt in status.tryouts %}
+                                {% if pt.is_finished %}
+                                <span class="status-icon status-finished" title="Selesai">✓</span>
+                                {% else %}
+                                <span class="status-icon" title="Belum selesai">○</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        <span title="Belum mulai">-</span>
+                        {% endif %}
+                        {% endwith %}
+                    </td>
+                    <td>
+                        {% with status=participant_status|get_item:participant.id %}
+                        {% if status.tryouts %}
+                            {% for pt in status.tryouts %}
+                                {% if pt.out_of_app_count > 0 %}
+                                <span class="status-out">{{ pt.out_of_app_count }}x ✗</span>
+                                {% else %}
+                                -
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                        -
+                        {% endif %}
+                        {% endwith %}
+                    </td>
+                    {% endif %}
+                    
+                    <td>
+                        <div class="action-btns">
+                            <a href="{% url 'dashboard:participant_edit' participant.id %}" class="btn-edit">Edit</a>
+                            <a href="{% url 'dashboard:participant_send_email' participant.id %}" class="btn-email" 
+                               onclick="return confirm('Kirim email ke {{ participant.full_name }}?')">📧</a>
+                            
+                            {% if has_active_tryout and not participant.blocked %}
+                            <a href="{% url 'dashboard:participant_block' participant.id %}" class="btn-block"
+                               onclick="return confirm('Block {{ participant.full_name }}?')">Block</a>
+                            {% endif %}
+                            
+                            <a href="{% url 'dashboard:participant_delete' participant.id %}" class="btn-delete"
+                               onclick="return confirm('Hapus {{ participant.full_name }}?')">Hapus</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

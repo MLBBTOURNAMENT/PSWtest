@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Peserta{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 40px;">
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'dashboard:index' %}" class="btn btn-small">← Kembali</a>
+    </div>
+
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <h2 style="margin-bottom: 20px;">Upload Data Peserta</h2>
+
+        <div style="background: #e3f2fd; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-size: 14px;">
+            <strong>Format Excel:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+                <li>Sheet1 = Hari 1, Sheet2 = Hari 2</li>
+                <li>Kolom: <strong>nama</strong>, <strong>sekolah</strong>, <strong>email</strong></li>
+            </ul>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>{{ form.file.label }}</label>
+                {{ form.file }}
+                {% if form.file.help_text %}
+                <small style="color: #666; font-size: 12px;">{{ form.file.help_text }}</small>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn">Upload & Generate Akun</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

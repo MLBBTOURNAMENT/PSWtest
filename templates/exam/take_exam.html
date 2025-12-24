@@ -1,0 +1,573 @@
+<!-- {% extends 'base.html' %}
+{% load exam_extras %}
+
+{% block title %}{{ tryout.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f5f7fa;
+    }
+
+    .exam-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 10px 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .exam-header-content {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .exam-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .exam-timer {
+        font-size: 14px;
+        font-weight: 600;
+        color: #b91c1c;
+        padding: 6px 10px;
+        border-radius: 6px;
+        background: #fee2e2;
+    }
+
+    .exam-container {
+        max-width: 1100px;
+        margin: 20px auto;
+        padding: 0 16px 20px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.7fr) minmax(240px, 0.9fr);
+        gap: 16px;
+    }
+
+    .questions-panel,
+    .navigation-panel {
+        background: #ffffff;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        padding: 20px;
+    }
+
+    .question-item {
+        margin-bottom: 24px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .question-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .question-number {
+        font-size: 13px;
+        font-weight: 600;
+        color: #4b5563;
+        margin-bottom: 6px;
+    }
+
+    .question-text {
+        font-size: 14px;
+        color: #111827;
+        margin-bottom: 14px;
+        line-height: 1.6;
+    }
+
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .option {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+    }
+
+    .option:hover {
+        border-color: #6366f1;
+        background: #f9fafb;
+    }
+
+    .option input[type="radio"] {
+        margin-top: 3px;
+    }
+
+    .option-label {
+        font-size: 14px;
+        color: #111827;
+    }
+
+    .option.selected {
+        border-color: #6366f1;
+        background: #eef2ff;
+    }
+
+    .navigation-panel {
+        position: sticky;
+        top: 76px;
+        height: fit-content;
+    }
+
+    .nav-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 12px;
+    }
+
+    .question-nav {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+        margin-bottom: 16px;
+    }
+
+    .question-nav-btn {
+        padding: 8px 0;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        font-size: 12px;
+        color: #4b5563;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+    }
+
+    .question-nav-btn.answered {
+        background: #6366f1;
+        border-color: #6366f1;
+        color: #ffffff;
+    }
+
+    .question-nav-btn:hover {
+        border-color: #6366f1;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px 0;
+        border-radius: 6px;
+        border: none;
+        background: #16a34a;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .submit-btn:hover {
+        background: #15803d;
+    }
+
+    .warning-box {
+        font-size: 12px;
+        color: #92400e;
+        background: #fef3c7;
+        border-radius: 6px;
+        padding: 8px 10px;
+        border: 1px solid #fcd34d;
+        margin-bottom: 10px;
+    }
+
+    @media (max-width: 900px) {
+        .exam-container {
+            grid-template-columns: 1fr;
+        }
+        .navigation-panel {
+            position: static;
+        }
+    }
+</style>
+{% endblock %} -->
+
+{% extends 'base.html' %}
+
+{% block title %}{{ tryout.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #f5f7fa;
+        margin: 0;
+        padding: 0;
+    }
+
+    .exam-header {
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 15px 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+
+    .exam-header-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .exam-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .exam-timer {
+        font-size: 18px;
+        font-weight: 600;
+        color: #e74c3c;
+        padding: 8px 16px;
+        background: #fee;
+        border-radius: 8px;
+    }
+
+    .exam-container {
+        max-width: 1400px;
+        margin: 80px auto 30px;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 20px;
+    }
+
+    .questions-panel {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .question-item {
+        margin-bottom: 35px;
+        padding-bottom: 35px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .question-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .question-number {
+        font-size: 14px;
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 10px;
+    }
+
+    .question-text {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .option {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .option:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+
+    .option input[type="radio"] {
+        margin-right: 12px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+
+    .option.selected {
+        border-color: #667eea;
+        background: #f8f9ff;
+    }
+
+    .option-label {
+        font-size: 15px;
+        color: #333;
+        cursor: pointer;
+        flex: 1;
+    }
+
+    .navigation-panel {
+        position: sticky;
+        top: 90px;
+        height: fit-content;
+    }
+
+    .nav-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 15px;
+    }
+
+    .nav-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 15px;
+    }
+
+    .question-nav {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+    }
+
+    .question-nav-btn {
+        padding: 10px;
+        border: 2px solid #e1e8ed;
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        color: #666;
+        transition: all 0.3s;
+    }
+
+    .question-nav-btn:hover {
+        border-color: #667eea;
+    }
+
+    .question-nav-btn.answered {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .submit-btn:hover {
+        background: #229954;
+        transform: translateY(-2px);
+    }
+
+    .warning-box {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #856404;
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="exam-header">
+    <div class="exam-header-content">
+        <div class="exam-title">{{ tryout.title }}</div>
+        <div class="exam-timer" id="timer">--:--</div>
+    </div>
+</div>
+
+<div class="exam-container">
+    <div class="questions-panel">
+        {% for question in questions %}
+        <div class="question-item" id="question-{{ question.id }}">
+            <div class="question-number">Soal Nomor {{ question.number }}</div>
+            <div class="question-text">{{ question.text|linebreaks }}</div>
+            
+            <div class="options">
+                <label class="option {% if existing_answers|get_item:question.id == 'A' %}selected{% endif %}">
+                    <input type="radio" name="question_{{ question.id }}" value="A" 
+                           data-question="{{ question.id }}"
+                           {% if existing_answers|get_item:question.id == 'A' %}checked{% endif %}>
+                    <span class="option-label">A. {{ question.option_a }}</span>
+                </label>
+                
+                <label class="option {% if existing_answers|get_item:question.id == 'B' %}selected{% endif %}">
+                    <input type="radio" name="question_{{ question.id }}" value="B"
+                           data-question="{{ question.id }}"
+                           {% if existing_answers|get_item:question.id == 'B' %}checked{% endif %}>
+                    <span class="option-label">B. {{ question.option_b }}</span>
+                </label>
+                
+                <label class="option {% if existing_answers|get_item:question.id == 'C' %}selected{% endif %}">
+                    <input type="radio" name="question_{{ question.id }}" value="C"
+                           data-question="{{ question.id }}"
+                           {% if existing_answers|get_item:question.id == 'C' %}checked{% endif %}>
+                    <span class="option-label">C. {{ question.option_c }}</span>
+                </label>
+                
+                <label class="option {% if existing_answers|get_item:question.id == 'D' %}selected{% endif %}">
+                    <input type="radio" name="question_{{ question.id }}" value="D"
+                           data-question="{{ question.id }}"
+                           {% if existing_answers|get_item:question.id == 'D' %}checked{% endif %}>
+                    <span class="option-label">D. {{ question.option_d }}</span>
+                </label>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="navigation-panel">
+        <div class="nav-card">
+            <div class="nav-title">Navigasi Soal</div>
+            <div class="question-nav">
+                {% for question in questions %}
+                <button class="question-nav-btn {% if existing_answers|get_item:question.id %}answered{% endif %}" 
+                        onclick="scrollToQuestion({{ question.id }})"
+                        id="nav-{{ question.id }}">
+                    {{ question.number }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="nav-card">
+            <div class="warning-box">
+                Pastikan semua soal sudah dijawab sebelum submit.
+            </div>
+            <form method="post" action="{% url 'exam:submit_exam' tryout.id %}" id="submitForm">
+                {% csrf_token %}
+                <button type="submit" class="submit-btn" onclick="return confirm('Apakah Anda yakin ingin submit? Jawaban tidak bisa diubah lagi.')">
+                    Submit Jawaban
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const csrfToken = '{{ csrf_token }}';
+    const tryoutId = {{ tryout.id }};
+    const remainingSeconds = {{ remaining_seconds }};
+    let timeLeft = remainingSeconds;
+    let isTabActive = true;
+    let hasTrackedOut = false;
+
+    // Timer countdown
+    function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 0) {
+            document.getElementById('submitForm').submit();
+        }
+        
+        timeLeft--;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    // Track out of app
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden && isTabActive) {
+            isTabActive = false;
+            if (!hasTrackedOut) {
+                fetch(`/exam/tryout/${tryoutId}/track-out/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+                hasTrackedOut = true;
+            }
+        } else if (!document.hidden) {
+            isTabActive = true;
+            setTimeout(() => { hasTrackedOut = false; }, 2000);
+        }
+    });
+
+    // Save answer on change
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const questionId = this.dataset.question;
+            const selectedOption = this.value;
+            
+            // Update UI
+            const options = this.closest('.options').querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            this.closest('.option').classList.add('selected');
+            
+            // Update navigation
+            document.getElementById(`nav-${questionId}`).classList.add('answered');
+            
+            // Save to server
+            fetch(`/exam/tryout/${tryoutId}/save-answer/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `question_id=${questionId}&selected_option=${selectedOption}`
+            });
+        });
+    });
+
+    // Scroll to question
+    function scrollToQuestion(questionId) {
+        document.getElementById(`question-${questionId}`).scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+
+    // Prevent accidental page leave
+    window.addEventListener('beforeunload', function(e) {
+        e.preventDefault();
+        e.returnValue = '';
+    });
+</script>
+{% endblock %}
+

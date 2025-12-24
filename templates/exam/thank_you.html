@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Selesai Try Out{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:600px;margin:60px auto;">
+    <div class="card">
+        <h2 style="margin-bottom:10px;">Terima kasih</h2>
+        <p style="font-size:14px;color:#4b5563;">
+            Terima kasih sudah mengerjakan try out <strong>{{ tryout.title }}</strong>.
+        </p>
+        <p style="font-size:14px;color:#6b7280;">
+            Silakan menunggu pengumuman dari panitia.
+        </p>
+        <a href="{% url 'exam:tryout_list' %}" class="btn" style="margin-top:20px;">Kembali ke daftar try out</a>
+    </div>
+</div>
+{% endblock %}
